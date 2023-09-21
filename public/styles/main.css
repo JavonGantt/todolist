@@ -1,0 +1,26 @@
+body{
+    background-color: #ffffff;
+}
+
+.formCard{
+    background-color: #ffffff;
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.btn-style{
+    background-color: #25445f;
+    color: #ffffff;
+}
+
+/* Remove the glowing effect when checkboxes are focused */
+.form-check-input:focus {
+    outline: none !important; /* Removes the outline */
+    box-shadow: none !important; /* Removes any box shadow */
+  }
+  
+
+.container1{
+    max-width: 90%; /* Adjust the maximum width as needed */
+}
+

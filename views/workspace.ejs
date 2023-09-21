@@ -1,0 +1,223 @@
+<%- include('partials/header.ejs') %>
+
+<% if (listCount > 0) { %>
+  <!-- This container contains the sidebar and main view -->
+  <div class="container1">
+  <div class="row">
+    <div class="col-3">
+      <div class="list-group" id="list-tab" role="tablist">
+        <!-- Display list titles as tabs -->
+        <% for (let i = 0; i < lists.length; i++) { %>
+          <a class="list-group-item list-group-item-action" id="list-<%= i %>-list" data-bs-toggle="list" href="#list-<%= i %>" role="tab" aria-controls="list-<%= i %>"><%= lists[i].listTitle %></a>
+        <% } %>
+      </div>
+      <!-- Modal -->
+      <div class="d-flex justify-content-center align-items-center mt-2">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">+ Add List</button>
+      </div>
+    </div>
+    <div class="col-7">
+      <div class="tab-content" id="nav-tabContent">
+        <!-- Display lists and their tasks -->
+        <% for (let i = 0; i < lists.length; i++) { %>
+          <div class="tab-pane fade" id="list-<%= i %>" role="tabpanel" aria-labelledby="list-<%= i %>-list">
+            <h1 class="text-body-emphasis text-center"><%= lists[i].listTitle %></h1>
+            <ul class="list-group">
+              <% if (Array.isArray(lists[i].tasks) && lists[i].tasks.length > 0) { %>
+                <% for (let j = 0; j < lists[i].tasks.length; j++) { %>
+                  <li class="list-group-item">
+                    <input class="form-check-input me-1" type="checkbox" value="" id="checkbox-<%= i %>-<%= j %>">
+                    <label class="form-check-label stretched-link" for="checkbox-<%= i %>-<%= j %>"><%= lists[i].tasks[j] %></label>
+                  </li>
+                <% } %>
+              <% } else { %>
+                <li class="list-group-item">No tasks in this list.</li>
+              <% } %>
+            </ul>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+<% } else { %>
+  <!-- This is where the form will appear if no list is made -->
+  <form id="taskForm" action="/submit" method="post" class="container formCard">
+    <div class="form-group col-3">
+      <label for="taskTitle">Title</label>
+      <input name="listTitle" type="text" class="form-control" id="taskTitle" aria-describedby="emailHelp" placeholder="List Title" required>
+      <small id="emailHelp" class="form-text text-muted">Please name your List!</small>
+    </div>
+  
+    <div id="taskContainer"> <!-- Create a container for tasks -->
+      <div class="form-group col-6" id="task1">
+        <label for="task">Task 1</label>
+        <input name="tasks[]" type="text" class="form-control" id="task1" placeholder="Enter Task Here" required>
+      </div>
+    </div>
+  
+    <button type="submit" class="btn btn-style" style="margin-top: 10px;">Submit</button>
+  
+    <button id="addTask" type="button" class="btn btn-style" style="margin-top: 10px;">Add Another Task</button>
+  </form>
+<% } %>
+</div>
+<!-- Modal Form -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="modalTaskForm" action="/addform" method="post" class="container formCard">
+          <div class="form-group col-6">
+            <label for="modalTitle">Title</label>
+            <input name="listTitle2" type="text" class="form-control" id="modalTitle" aria-describedby="emailHelp" placeholder="List Title" required>
+            <small id="emailHelp" class="form-text text-muted">Please name your List!</small>
+          </div>
+
+          <div id="modalTaskContainer"> <!-- Create a container for tasks -->
+            <div class="form-group col-8" id="modalTask1">
+              <label for="modalTask">Task 1</label>
+              <input name="task1[]" type="text" class="form-control" id="modalTask" placeholder="Enter Task Here" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-style" style="margin-top: 10px;">Submit</button>
+
+          <button id="modalAddTask" type="button" class="btn btn-style" style="margin-top: 10px;">Add Another Task</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- JS needed to run -->
+<script>
+
+let lists =[]
+let listIndex;
+let index;
+
+
+// This section is the newly added code
+
+const listItems = document.querySelectorAll('.list-group-item');
+  const selectedList = document.getElementById('selected-list');
+
+
+
+
+
+
+
+function displayListContent(listIndex, lists) {
+  const list = lists[listIndex];
+  if (list) {
+    // Clear the previous content
+    selectedList.innerHTML = '';
+
+    // Create a heading for the list
+    const listTitle = document.createElement('h1');
+    listTitle.classList.add('text-body-emphasis', 'text-center');
+    listTitle.textContent = list.listTitle;
+    selectedList.appendChild(listTitle);
+
+    // Create a list for tasks
+    const taskList = document.createElement('ul');
+    taskList.classList.add('list-group');
+    if (list.tasks && list.tasks.length > 0) {
+      list.tasks.forEach((task, index) => {
+        const taskItem = document.createElement('li');
+        taskItem.classList.add('list-group-item');
+        const checkboxId = `checkbox-${listIndex}-${index}`;
+        taskItem.innerHTML = `
+          <input class="form-check-input me-1" type="checkbox" value="" id="${checkboxId}">
+          <label class="form-check-label stretched-link" for="${checkboxId}">${task}</label>
+        `;
+        taskList.appendChild(taskItem);
+
+        // Add event listener to toggle checkbox on change
+        const checkbox = taskItem.querySelector(`#${checkboxId}`);
+        checkbox.addEventListener('change', () => {
+          console.log("Checkbox changed");
+        });
+      });
+    } else {
+      const emptyTaskItem = document.createElement('li');
+      emptyTaskItem.classList.add('list-group-item');
+      emptyTaskItem.textContent = 'No tasks in this list.';
+      taskList.appendChild(emptyTaskItem);
+    }
+    selectedList.appendChild(taskList);
+  }
+}
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    $(document).on('click', '#modalAddTask', function () {
+  let modalTaskContainer = $('#modalTaskContainer');
+  if (!modalTaskContainer.length) {
+    modalTaskContainer = $('<div>').attr('id', 'modalTaskContainer');
+    $('#modalTaskForm').append(modalTaskContainer);
+  }
+  let newModalTask = $('<div>').addClass('form-group col-8');
+  let taskCount = modalTaskContainer.children().length + 1;
+  newModalTask.html(`
+    <label for="modalTask${taskCount}">Task ${taskCount}</label>
+    <input name="task1[]" type="text" class="form-control" id="modalTask${taskCount}" placeholder="Enter Task Here" required>
+  `);
+  modalTaskContainer.append(newModalTask);
+});
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Check if the element with ID "addTask" exists
+  const addTaskButton = document.getElementById("addTask");
+  if (addTaskButton) {
+    addTaskButton.addEventListener("click", function () {
+      // Add your event listener logic here
+      let taskContainer = document.getElementById("taskContainer");
+      if (!taskContainer) {
+        taskContainer = document.createElement("div");
+        taskContainer.id = "taskContainer";
+        document.getElementById("taskForm").appendChild(taskContainer);
+      }
+      let newTask = document.createElement("div");
+      let addTaskBTN = document.getElementById("addTask");
+      let submitBTN = document.querySelector("button[type='submit']");
+      newTask.className = "form-group col-6";
+      newTask.innerHTML = `
+        <label for="task${taskContainer.children.length + 1}">Task ${taskContainer.children.length + 1}</label>
+        <input name="tasks[]" type="text" class="form-control" id="task${taskContainer.children.length + 1}" placeholder="Enter Task Here" required>
+      `;
+      addTaskBTN.style.marginLeft = "5px";
+      submitBTN.className = 'btn btn-style'
+      taskContainer.appendChild(newTask);
+    });
+  }
+});
+
+
+
+
+
+
+// Assuming you have an event listener for the label clicks
+
+
+
+
+
+
+
+</script>
+
+<%- include('partials/footer.ejs') %>
