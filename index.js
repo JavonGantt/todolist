@@ -52,8 +52,17 @@ app.get("/workspace", (req, res) => {
     res.redirect("/workspace");
   });
   
+  app.post('/update-list', (req, res) => {
+    const updatedLists = req.body;
+    console.log(updatedLists); // Log the updatedLists for debugging
   
-
+    // Set the response content type to JSON
+    res.setHeader('Content-Type', 'application/json');
+  
+    // Send a JSON response with the message
+    res.json({ message: 'List updated successfully' });
+  });
+  
 
 
 app.listen(port, () => {
