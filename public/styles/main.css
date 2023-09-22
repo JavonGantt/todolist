@@ -24,3 +24,17 @@ body{
     max-width: 90%; /* Adjust the maximum width as needed */
 }
 
+@media (max-width: 760px) {
+    .hide1{
+        display: none;
+    }
+
+    .align1{
+        text-align: center;
+        justify-content: center;
+    }
+    
+}
+
+
+

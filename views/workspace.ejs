@@ -41,15 +41,15 @@
   </div>
 <% } else { %>
   <!-- This is where the form will appear if no list is made -->
-  <form id="taskForm" action="/submit" method="post" class="container formCard">
-    <div class="form-group col-3">
+  <form id="taskForm" action="/submit" method="post" class="container formCard align1">
+    <div class="form-group col-3 noListForm1">
       <label for="taskTitle">Title</label>
       <input name="listTitle" type="text" class="form-control" id="taskTitle" aria-describedby="emailHelp" placeholder="List Title" required>
       <small id="emailHelp" class="form-text text-muted">Please name your List!</small>
     </div>
   
     <div id="taskContainer"> <!-- Create a container for tasks -->
-      <div class="form-group col-6" id="task1">
+      <div class="form-group col-6 noListForm2" id="task1">
         <label for="task">Task 1</label>
         <input name="tasks[]" type="text" class="form-control" id="task1" placeholder="Enter Task Here" required>
       </div>
@@ -103,6 +103,22 @@
 let lists =[]
 let listIndex;
 let index;
+
+
+// Handle Form Screen Size for Mobile
+$(window).on('resize', function(){
+  if($(window).width() < 760){
+    $('.noListForm1').addClass('col')
+    $('.noListForm2').addClass('col')
+    $('.noListForm1').removeClass('col-3')
+    $('.noListForm2').removeClass('col-6')
+  } else if($(window).width() > 760){
+    $('.noListForm1').addClass('col-3')
+    $('.noListForm2').addClass('col-6')
+    $('.noListForm1').removeClass('col')
+    $('.noListForm2').removeClass('col')
+  }
+})
 
 
 // This section is the newly added code
@@ -192,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let newTask = document.createElement("div");
       let addTaskBTN = document.getElementById("addTask");
       let submitBTN = document.querySelector("button[type='submit']");
-      newTask.className = "form-group col-6";
+      newTask.className = "form-group col-6 noListForm2";
       newTask.innerHTML = `
         <label for="task${taskContainer.children.length + 1}">Task ${taskContainer.children.length + 1}</label>
         <input name="tasks[]" type="text" class="form-control" id="task${taskContainer.children.length + 1}" placeholder="Enter Task Here" required>
