@@ -57,7 +57,8 @@ app.get("/workspace", (req, res) => {
     // req.body.lists is grabbing which list got pressed
     const updatedLists = req.body.lists;
     console.log(updatedLists); // Log the updatedLists for debugging
-  
+    lists.splice(updatedLists,1)
+
     // Set the response content type to JSON
     res.setHeader('Content-Type', 'application/json');
   
