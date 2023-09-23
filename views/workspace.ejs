@@ -164,9 +164,15 @@ const selectedList = document.getElementById('selected-list');
 //   $(this).closest('a').remove();
 // });
 
+
+
+
+
+// This is sending the location of the list in the array
+
 $(".x").on('click', function(){
   var listIndex = $(this).closest('a').data('list-index');
-  
+
   $("#list-" + listIndex).remove();
   
   if (listIndex !== undefined) {
@@ -176,7 +182,7 @@ $(".x").on('click', function(){
   $(this).closest('a').remove();
   console.log(lists);
 
-  $.post('/update-list', { lists: lists }, function(response) {
+  $.post('/update-list', { lists: listIndex }, function(response) {
     // Handle the response if needed
   });
 

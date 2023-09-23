@@ -53,7 +53,9 @@ app.get("/workspace", (req, res) => {
   });
   
   app.post('/update-list', (req, res) => {
-    const updatedLists = req.body;
+
+    // req.body.lists is grabbing which list got pressed
+    const updatedLists = req.body.lists;
     console.log(updatedLists); // Log the updatedLists for debugging
   
     // Set the response content type to JSON
